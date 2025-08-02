@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link href="https://fonts.googleapis.com/css2?family=Jersey+10&display=swap" rel="stylesheet">
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+      width: 100vw;
+      background-color: rgb(255, 255, 255);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: 'Jersey 10', sans-serif;
+    }
+
+    .container {
+      width: 900px;
+      height: 550px;
+      background-color: #8B9C99;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      border: 2px solid black;
+      box-sizing: border-box;
+      position: relative;
+    }
+
+    .topbar {
+      width: 877px;
+      height: 40px;
+      border-bottom: 2px solid black;
+      border-left: 2px solid black;
+      border-right: 2px solid black;
+      background-color: #EBA739;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      padding-right: 20px;
+    }
+
+    .logout-btn {
+      padding: 5px 15px;
+      font-size: 16px;
+      border: 2px solid black;
+      background-color: #e0e0e0;
+      cursor: pointer;
+    }
+
+    .menu {
+      display: flex;
+      gap: 50px;
+      position: absolute;
+      top: -45px;
+      z-index: 10;
+    }
+
+    .tab {
+      background-color: #EBA739;
+      border: 2px solid black;
+      border-bottom: 2px solid black;
+      padding: 8px 30px;
+      border-top-left-radius: 20px;
+      border-top-right-radius: 20px;
+      font-size: 24px;
+      cursor: pointer;
+      transition: 0.2s ease;
+    }
+
+    .tab.active-tab {
+      border-bottom: none;
+      z-index: 11;
+    }
+
+    .main {
+      width: 850px;
+      padding: 10px;
+      background-color: #8B9C99;
+      display: none;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .main.active {
+      display: flex;
+    }
+
+    .top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .top h1 {
+      font-size: 50px;
+      color: white;
+      margin: 0;
+    }
+
+    .mid {
+      display: flex;
+      gap: 20px;
+      justify-content: space-between;
+    }
+    .left{
+      height: 200px;
+      width: 200px;
+      background-color: #333;
+    }
+    .right{
+      height: 400px;
+      width: 300px;
+      background-color: #cfd8d6;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Menu Tabs -->
+    <div class="menu">
+      <div class="tab active-tab" onclick="showPage('dashboardPage', 0)">Dashboard</div>
+      <div class="tab" onclick="showPage('detailsPage', 1)">Personal Details</div>
+    </div>
+
+    <!-- Topbar with Logout Button -->
+    <div class="topbar">
+      <button id="logoutBtn" class="logout-btn">Logout</button>
+    </div>
+
+    <!-- Dashboard Page -->
+    <div class="main active" id="dashboardPage" style="flex-direction: column; align-items: center; gap: 10px;">
+      <div class="token-label" style="color: white; font-size: 18px;">Token Number : 01</div>
+      <div class="content-boxes" style="display: flex; gap: 40px;">
+        <!-- Left Box -->
+        <div style="width: 250px; height: 400px; background-color: #e6d3b3; border: 1px solid black; padding: 15px; box-sizing: border-box;">
+          <div style="font-weight: bold; margin-bottom: 10px;">Medical issue:</div>
+          <div id="toggleDetails" style="margin-bottom: 10px;">Full details ▼</div>
+          <div id="detailsContainer" style="width: 100%; height: 300px; background-color: #73a4dd; border: 1px solid black; overflow-y: auto;"></div>
+        </div>
+
+        <!-- Right Box -->
+        <div style="width: 400px; height: 400px; background-color: #e0e0e0; border: 1px solid black; padding: 15px; box-sizing: border-box; position: relative;">
+          <div style="font-weight: bold; margin-bottom: 10px;">Prescription-</div>
+          <div style="width: 100%; height: 280px; background-color: gray; margin-bottom: 10px;">
+            <textarea id="prescriptionInput" placeholder="Write prescription here..." style="width: 100%; height: 100%;"></textarea>
+          </div>
+          <button id="sendBtn" style="position: absolute; right: 15px; bottom: 15px; background-color: #666; color: white; border: 1px solid black; padding: 5px 15px;">Send</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Personal Details Page -->
+    <div class="main" id="detailsPage">
+      <div class="top"><h1>Details</h1></div>
+      <div class="mid" style="flex-direction: column; width: 100%; gap: 15px;">
+        <div style="display: flex; align-items: center; gap: 10px; background: #cfd8d6; border: 2px solid black; padding: 10px;">
+          <label for="tokenSearch" style="font-size: 24px; font-weight: bold;">Enter Token No.:</label>
+          <input type="text" id="tokenSearch" style="flex: 1; padding: 6px; font-size: 18px;" />
+          <button onclick="fetchDetails()" style="padding: 6px 20px; background-color: #663333; color: white; font-size: 16px; border: 2px solid black;">Fetch</button>
+        </div>
+        <table style="width: 100%; background-color: #9ad8e0; border: 2px solid black; border-collapse: collapse;">
+          <thead>
+            <tr style="border-bottom: 2px solid black;">
+              <th style="padding: 8px;">Name</th>
+              <th style="padding: 8px;">Date</th>
+              <th style="padding: 8px;">Age</th>
+              <th style="padding: 8px;">Gender</th>
+              <th style="padding: 8px;">Phone No.</th>
+              <th style="padding: 8px;">Reason To visit</th>
+            </tr>
+          </thead>
+          <tbody id="detailsTable">
+            <tr><td colspan="6" style="text-align: center; padding: 10px;">No data fetched yet.</td></tr>
+          </tbody>
+        </table>
+        <div style="background-color: #9ad8e0; border: 2px solid black; margin-top: 10px; padding: 10px;">
+          <strong style="font-size: 20px;">Last Prescription:</strong>
+          <div id="lastPrescription" style="margin-top: 10px; font-size: 18px; color: #333;">—</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+ 
+  <!-- Firebase & App Logic -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+    import {
+      getFirestore, collection, query, where, orderBy,
+      doc, getDoc, updateDoc, onSnapshot
+    } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDfmYfvSl-S9_WKqLCQeGaLRFa4i0_Xw4E",
+      authDomain: "sage-care-72e2e.firebaseapp.com",
+      projectId: "sage-care-72e2e",
+      storageBucket: "sage-care-72e2e.appspot.com",
+      messagingSenderId: "851285921763",
+      appId: "1:851285921763:web:56e0e30867602811e4dad6"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    let currentTokenData = null;
+
+    document.getElementById("logoutBtn").addEventListener("click", () => {
+      signOut(auth).then(() => window.location.href = "index.html");
+    });
+
+    const tabs = document.querySelectorAll('.tab');
+    const pages = document.querySelectorAll('.main');
+    window.showPage = function (id, index) {
+      pages.forEach(p => p.classList.remove('active'));
+      tabs.forEach(t => t.classList.remove('active-tab'));
+      document.getElementById(id).classList.add('active');
+      tabs[index].classList.add('active-tab');
+    };
+
+    function renderPatient(data) {
+      currentTokenData = data;
+      document.querySelector(".token-label").textContent = `Token Number : ${data.token}`;
+      document.querySelector(".content-boxes").style.display = "flex";
+      const d = document.getElementById("detailsContainer");
+      d.innerHTML = `
+        <div><strong>Name:</strong> ${data.name}</div>
+        <div><strong>Age:</strong> ${data.age}</div>
+        <div><strong>Gender:</strong> ${data.gender}</div>
+        <div><strong>Date:</strong> ${data.date}</div>
+        <div><strong>Phone:</strong> ${data.phone}</div>
+        <div><strong>Reason:</strong> ${data.reason}</div>
+      `;
+    }
+
+    function clearPatient() {
+      currentTokenData = null;
+      document.querySelector(".token-label").textContent = "No patients in queue";
+      document.querySelector(".content-boxes").style.display = "none";
+    }
+
+   function listenToQueue() {
+  const q = query(collection(db, "tokens"), where("prescription", "==", null), orderBy("timestamp", "asc"));
+  onSnapshot(q, snapshot => {
+    console.log("🔁 Snapshot triggered");
+    console.log("🧾 Documents size:", snapshot.size);
+
+    if (!snapshot.empty) {
+      const docSnap = snapshot.docs[0];
+      const tokenData = { id: docSnap.id, ...docSnap.data() };
+      console.log("✅ Patient loaded:", tokenData);
+      currentTokenData = tokenData;
+      renderPatient(tokenData);
+    } else {
+      console.log("🚫 No patients in queue with prescription: null");
+      clearPatient();
+    }
+  });
+}
+
+
+    document.getElementById("sendBtn").addEventListener("click", async () => {
+      const prescription = document.getElementById("prescriptionInput").value.trim();
+      if (!prescription) return alert("Please enter a prescription.");
+      if (!currentTokenData || !currentTokenData.id) return alert("No patient loaded.");
+
+      try {
+        await updateDoc(doc(db, "tokens", currentTokenData.id), { prescription });
+        alert("Prescription saved!");
+        document.getElementById("prescriptionInput").value = "";
+        clearPatient(); // Snapshot will auto-load next
+      } catch (e) {
+        console.error(e);
+        alert("Failed to save prescription.");
+      }
+    });
+
+    window.fetchDetails = async function () {
+      const token = document.getElementById("tokenSearch").value.trim();
+      const table = document.getElementById("detailsTable");
+      const presDiv = document.getElementById("lastPrescription");
+      try {
+        const snap = await getDoc(doc(db, "tokens", token));
+        if (!snap.exists()) {
+          table.innerHTML = `<tr><td colspan="6">Token not found</td></tr>`;
+          presDiv.textContent = "—";
+          return;
+        }
+        const d = snap.data();
+        table.innerHTML = `<tr>
+          <td>${d.name}</td><td>${d.date}</td><td>${d.age}</td><td>${d.gender}</td><td>${d.phone}</td><td>${d.reason}</td>
+        </tr>`;
+        presDiv.textContent = d.prescription || "No previous prescription.";
+      } catch (e) {
+        console.error(e);
+        alert("Failed to fetch data.");
+      }
+    };
+
+    const toggle = document.getElementById("toggleDetails");
+    let isVisible = true;
+    toggle.addEventListener("click", () => {
+      isVisible = !isVisible;
+      const box = document.getElementById("detailsContainer");
+      box.style.display = isVisible ? "block" : "none";
+      toggle.textContent = isVisible ? "Full details ▼" : "Show details ▲";
+    });
+
+    onAuthStateChanged(auth, user => {
+      if (!user) window.location.href = "index.html";
+      else listenToQueue();
+    });
+  </script>
+
+</body>
+</html>

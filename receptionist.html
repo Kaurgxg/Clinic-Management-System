@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link href="https://fonts.googleapis.com/css2?family=Jersey+10&display=swap" rel="stylesheet">
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+      width: 100vw;
+      background-color: rgb(255, 255, 255);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: 'Jersey 10', sans-serif;
+    }
+
+    .container {
+      width: 900px;
+      height: 550px;
+      background-color: #8B9C99;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      border: 2px solid black;
+      box-sizing: border-box;
+      position: relative;
+    }
+
+    .topbar {
+      width: 899px;
+      height: 50px;
+      border-bottom: 2px solid black;
+      border-left: 2px solid black;
+      border-right: 2px solid black;
+      background-color: #EBA739;
+    }
+
+    .menu {
+      display: flex;
+      gap: 50px;
+      position: absolute;
+      top: -45px;
+      z-index: 10;
+    }
+
+    .tab {
+      background-color: #EBA739;
+      border: 2px solid black;
+      border-bottom: 2px solid black; /* Normal bottom border */
+      padding: 8px 30px;
+      border-top-left-radius: 20px;
+      border-top-right-radius: 20px;
+      font-size: 24px;
+      cursor: pointer;
+      transition: 0.2s ease;
+    }
+
+    .tab.active-tab {
+      border-bottom: none;
+      z-index: 11;
+    }
+
+    .main {
+      width: 850px;
+      padding: 10px;
+      background-color: #8B9C99;
+      display: none;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .main.active {
+      display: flex;
+    }
+
+    .top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .top h1 {
+      font-size: 50px;
+      color: white;
+      margin: 0;
+    }
+
+    .top button {
+      padding: 5px 15px;
+      font-size: 16px;
+      border: 2px solid black;
+      background-color: #e0e0e0;
+      cursor: pointer;
+    }
+
+    .mid {
+      display: flex;
+      gap: 20px;
+      justify-content: space-between;
+    }
+
+    .form-box {
+      width: 45%;
+      background-color: #FDF7D6;
+      border: 2px solid black;
+      padding: 10px 15px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .form-box input {
+      width: 100%;
+      padding: 8px;
+      border: none;
+      border-bottom: 1px solid #999;
+      background: transparent;
+      font-family: 'Jersey 10', sans-serif;
+      font-size: 18px;
+      color: #000;
+    }
+
+    .form-box input:focus {
+      outline: none;
+      border-bottom: 2px solid #555;
+    }
+
+    .form-box input::placeholder {
+      color: #444;
+    }
+
+    .queue-box {
+      width: 50%;
+      background-color: #7AA67A;
+      border: 2px solid black;
+      padding: 10px;
+    }
+
+    .queue-box h2 {
+      font-size: 24px;
+      font-weight: bold;
+      border-bottom: 2px solid black;
+      margin-top: 0;
+    }
+
+    .queue-columns {
+      display: flex;
+      justify-content: space-between;
+      padding-top: 10px;
+    }
+
+    .column {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      font-size: 18px;
+      gap: 5px;
+    }
+
+    .bottom {
+      background-color: #E77E1A;
+      padding: 15px;
+      border: 2px solid black;
+    }
+
+    .bottom h2 {
+      margin: 0;
+      font-size: 26px;
+      font-weight: bold;
+      color: #222;
+      text-shadow: 1px 1px #000;
+    }
+
+    .skipped-list {
+      margin-top: 10px;
+      background-color: #8B9C99;
+      border: 2px solid black;
+      padding: 10px;
+      display: flex;
+      gap: 30px;
+      font-size: 20px;
+      justify-content: center;
+    }
+
+    /* Prescription Section Styles */
+    .prescription-container {
+      height: 400px;
+      display: flex;
+      gap: 50px;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 20px;
+      background-color: #8B9C99;
+    }
+
+    .prescription-left {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .token-banner {
+      background-color: #9FE5FF;
+      width: 250px;
+      padding: 15px;
+      border-bottom: 20px solid #458B94;
+      font-size: 20px;
+      font-weight: bold;
+      text-align: center;
+      box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.2);
+      border: 2px solid black;
+    }
+
+    .bill-box {
+      background-color: white;
+      width: 250px;
+      padding: 20px;
+      border: 2px solid black;
+      font-size: 18px;
+      font-weight: bold;
+      text-align: left;
+    }
+
+    .bill-box h3 {
+      text-align: center;
+      margin: 0 0 10px 0;
+      font-size: 18px;
+    }
+
+    .bill-row {
+      display: flex;
+      justify-content: space-between;
+      margin: 5px 0;
+    }
+
+    .bill-row.total {
+      margin-top: 10px;
+      border-top: 1px solid black;
+      padding-top: 10px;
+      font-weight: bold;
+    }
+
+    .prescription-right {
+      background-color: #603B3B;
+      padding: 20px;
+      width: 400px;
+      height: 400px;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      border: 2px solid black;
+    }
+
+    .prescription-right h2 {
+      margin-top: 0;
+      font-size: 20px;
+    }
+
+    .prescription-box {
+      background-color: #d9d9d9;
+      height: 100%;
+      margin-top: 10px;
+      padding: 10px;
+      color: #000;
+      border: 1px solid black;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Menu Tabs -->
+    <div class="menu">
+      <div class="tab active-tab" onclick="showPage('dashboardPage', 0)">Dashboard</div>
+      <div class="tab" onclick="showPage('detailsPage', 1)">Personal details</div>
+      <div class="tab" onclick="showPage('prescriptionPage', 2)">Prescription</div>
+    </div>
+
+    <!-- Top Bar -->
+    <div class="topbar"></div>
+
+    <!-- Dashboard Page -->
+    <div class="main active" id="dashboardPage">
+      <div class="top">
+        <h1 id="tokenDisplay">Token No. – 01</h1>
+        <button onclick="submitForm()">Done</button>
+      </div>
+      <div class="mid">
+        <div class="form-box">
+          <input type="text" id="nameInput" placeholder="Name" />
+          <input type="number" id="ageInput" placeholder="Age" />
+          <input type="text" id="genderInput" placeholder="Gender" />
+          <input type="date" id="dateInput" />
+          <input type="text" id="phoneInput" placeholder="Phone no." />
+          <input type="text" id="reasonInput" placeholder="Reason to visit" />
+        </div>
+        <div class="queue-box">
+          <h2>Current Queue</h2>
+          <div class="queue-columns">
+            <div class="column" id="col1"><span>Up next:</span></div>
+            <div class="column" id="col2"><span>Up next:</span></div>
+            <div class="column" id="col3"><span>Up next:</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="bottom">
+        <h2>Skipped Clients:</h2>
+        <div class="skipped-list" id="skippedList"></div>
+      </div>
+    </div>
+
+    <!-- Personal Details Page -->
+    <div class="main" id="detailsPage">
+      <div class="top"></div>
+      <div class="mid" style="flex-direction: column; width: 100%; gap: 15px;">
+        <div style="display: flex; align-items: center; gap: 10px; background: #cfd8d6; border: 2px solid black; padding: 10px;">
+          <label for="tokenSearch" style="font-size: 24px; font-weight: bold;">Enter Token No.:</label>
+          <input type="text" id="tokenSearch" style="flex: 1; padding: 6px; font-size: 18px;" />
+          <button onclick="fetchDetails()" style="padding: 6px 20px; background-color: #663333; color: white; font-size: 16px; border: 2px solid black;">Fetch</button>
+        </div>
+        <table style="width: 100%; background-color: #9ad8e0; border: 2px solid black; border-collapse: collapse;">
+          <thead>
+            <tr style="border-bottom: 2px solid black;">
+              <th style="padding: 8px;">Name</th>
+              <th style="padding: 8px;">Date</th>
+              <th style="padding: 8px;">Age</th>
+              <th style="padding: 8px;">Gender</th>
+              <th style="padding: 8px;">Phone No.</th>
+              <th style="padding: 8px;">Reason To visit</th>
+            </tr>
+          </thead>
+          <tbody id="detailsTable">
+            <tr>
+              <td colspan="6" style="text-align: center; padding: 10px;">No data fetched yet.</td>
+            </tr>
+          </tbody>
+        </table>
+        <div style="background-color: #9ad8e0; border: 2px solid black; margin-top: 10px;">
+          <strong style="font-size: 20px;">Last Prescription:</strong>
+          <div id="lastPrescription" style="margin-top: 10px; font-size: 18px; color: #333;">—</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Prescription Page -->
+    <div class="main" id="prescriptionPage">
+      <div class="prescription-container">
+        <div class="prescription-left">
+          <select id="tokenDropdown" style="padding: 10px; font-size: 18px; width: 250px;">
+            <option value="">-- Select Token --</option>
+          </select>
+          <div class="bill-box" id="billBox">
+            <h3>Medical Bill</h3>
+            <div>Select a token to view the bill.</div>
+          </div>
+        </div>
+        <div class="prescription-right">
+          <h2>Prescription</h2>
+          <div class="prescription-box" id="prescriptionContent">
+            Select a token from the dropdown to view prescription.
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div> <!-- End of .container -->
+</body>
+
+<!-- Firebase SDKs as ES Modules -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+  import {
+    getFirestore,
+    collection,
+    query,
+    doc,
+    setDoc,
+    getDoc,
+    onSnapshot,
+    orderBy,
+    serverTimestamp
+  } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyDfmYfvSl-S9_WKqLCQeGaLRFa4i0_Xw4E",
+    authDomain: "sage-care-72e2e.firebaseapp.com",
+    projectId: "sage-care-72e2e",
+    storageBucket: "sage-care-72e2e.appspot.com",
+    messagingSenderId: "851285921763",
+    appId: "1:851285921763:web:56e0e30867602811e4dad6"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
+
+  onAuthStateChanged(auth, user => {
+    if (!user) window.location.href = "index.html";
+  });
+
+  const logoutBtn = document.getElementById("logoutBtn");
+  if (logoutBtn) {
+    logoutBtn.addEventListener("click", () => {
+      signOut(auth).then(() => window.location.href = "index.html");
+    });
+  }
+
+  const tabs = document.querySelectorAll('.tab');
+  const pages = document.querySelectorAll('.main');
+
+  window.showPage = function (pageId, tabIndex) {
+    pages.forEach(div => div.classList.remove('active'));
+    document.getElementById(pageId).classList.add('active');
+    tabs.forEach(tab => tab.classList.remove('active-tab'));
+    tabs[tabIndex].classList.add('active-tab');
+  };
+
+  let currentToken = 1;
+
+  async function fetchCurrentToken() {
+    const configRef = doc(db, "config", "tokens");
+    try {
+      const snap = await getDoc(configRef);
+      if (snap.exists()) {
+        const val = snap.data().lastToken || 0;
+        currentToken = val + 1;
+      } else {
+        await setDoc(configRef, { lastToken: 1 });
+        currentToken = 1;
+      }
+      updateTokenDisplay();
+      listenToQueue();
+    } catch (e) {
+      console.error("Error loading token config:", e);
+    }
+  }
+
+const tokenDropdown = document.getElementById("tokenDropdown");
+const billBox = document.getElementById("billBox");
+const prescriptionContent = document.getElementById("prescriptionContent");
+
+async function loadPrescribedTokens() {
+  const snapshot = await getDocs(collection(db, "tokens"));
+  tokenDropdown.innerHTML = `<option value="">-- Select Token --</option>`;
+  snapshot.forEach(docSnap => {
+    const data = docSnap.data();
+    if (data.prescription) {
+      const opt = document.createElement("option");
+      opt.value = docSnap.id;
+      opt.textContent = `Token ${docSnap.id}`;
+      tokenDropdown.appendChild(opt);
+    }
+  });
+}
+
+tokenDropdown.addEventListener("change", async () => {
+  const tokenId = tokenDropdown.value;
+  if (!tokenId) return;
+
+  const snap = await getDoc(doc(db, "tokens", tokenId));
+  if (!snap.exists()) {
+    prescriptionContent.textContent = "Token not found.";
+    billBox.innerHTML = "<h3>Medical Bill</h3><div>Token not found.</div>";
+    return;
+  }
+
+  const d = snap.data();
+  prescriptionContent.textContent = d.prescription || "No prescription found.";
+
+  const medicineCharge = (d.prescription?.length || 0) * 2 + 50;
+  const consultation = 500;
+  const total = consultation + medicineCharge;
+
+  billBox.innerHTML = `
+    <h3>Medical Bill</h3>
+    <div class="bill-row"><span>Patient:</span><span>${d.name}</span></div>
+    <div class="bill-row"><span>Token:</span><span>${tokenId}</span></div>
+    <div class="bill-row"><span>Check-up:</span><span>₹${consultation}</span></div>
+    <div class="bill-row"><span>Medicine:</span><span>₹${medicineCharge}</span></div>
+    <div class="bill-row total"><span>Total:</span><span>₹${total}</span></div>
+  `;
+});
+
+loadPrescribedTokens();
+
+
+  function updateTokenDisplay() {
+    document.getElementById("tokenDisplay").textContent = `Token No. – ${String(currentToken).padStart(2, '0')}`;
+  }
+
+  function listenToQueue() {
+    const col1 = document.getElementById("col1");
+    const col2 = document.getElementById("col2");
+    const col3 = document.getElementById("col3");
+
+    const q = query(collection(db, "tokens"), orderBy("timestamp", "desc"));
+    onSnapshot(q, (snapshot) => {
+      const tokens = [];
+      snapshot.forEach(doc => tokens.push(doc.data()));
+      [col1, col2, col3].forEach(col => {
+        while (col.children.length > 1) col.removeChild(col.lastChild);
+      });
+      for (let i = 0; i < tokens.length && i < 3; i++) {
+        const el = document.createElement("span");
+        el.textContent = `Token ${tokens[i].token}`;
+        [col1, col2, col3][i].appendChild(el);
+      }
+    });
+  }
+
+  window.submitForm = async function () {
+    const name = document.getElementById("nameInput").value.trim();
+    const age = document.getElementById("ageInput").value.trim();
+    const gender = document.getElementById("genderInput").value.trim();
+    const date = document.getElementById("dateInput").value.trim();
+    const phone = document.getElementById("phoneInput").value.trim();
+    const reason = document.getElementById("reasonInput").value.trim();
+
+    if (!name || !age || !gender || !date || !phone || !reason) {
+      alert("Please fill all fields");
+      return;
+    }
+
+    const tokenNumber = String(currentToken).padStart(2, '0');
+    const entry = {
+      token: tokenNumber,
+      name,
+      age,
+      gender,
+      date,
+      phone,
+      reason,
+      prescription: null,
+      timestamp: serverTimestamp()
+    };
+
+    try {
+      await setDoc(doc(db, "tokens", tokenNumber), entry);
+      await setDoc(doc(db, "config", "tokens"), { lastToken: currentToken });
+
+      currentToken++;
+      updateTokenDisplay();
+
+      ["nameInput", "ageInput", "genderInput", "dateInput", "phoneInput", "reasonInput"].forEach(id => {
+        document.getElementById(id).value = '';
+      });
+    } catch (e) {
+      console.error("Error writing token to Firestore:", e);
+      alert("Failed to submit data.");
+    }
+  };
+
+  window.fetchDetails = async function () {
+    const tokenSearch = document.getElementById("tokenSearch").value.trim();
+    const table = document.getElementById("detailsTable");
+    const prescriptionDiv = document.getElementById("lastPrescription");
+
+    try {
+      const snap = await getDoc(doc(db, "tokens", tokenSearch));
+      if (!snap.exists()) {
+        table.innerHTML = `<tr><td colspan="6" style="text-align: center;">Token not found.</td></tr>`;
+        prescriptionDiv.textContent = "—";
+        return;
+      }
+
+      const entry = snap.data();
+      table.innerHTML = `
+        <tr>
+          <td>${entry.name}</td>
+          <td>${entry.date}</td>
+          <td>${entry.age}</td>
+          <td>${entry.gender}</td>
+          <td>${entry.phone}</td>
+          <td>${entry.reason}</td>
+        </tr>
+      `;
+      prescriptionDiv.textContent = entry.prescription || "No previous prescription recorded.";
+    } catch (e) {
+      console.error("Error loading token details:", e);
+      alert("Failed to load token info.");
+    }
+  };
+
+  fetchCurrentToken();
+</script>
+
+</html>
