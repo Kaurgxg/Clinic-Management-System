@@ -1,318 +1,247 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <link href="https://fonts.googleapis.com/css2?family=Jersey+10&display=swap" rel="stylesheet">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display&display=swap" rel="stylesheet">
+  <title>Responsive Login</title>
   <style>
-    html, body {
+    /* your original CSS (unchanged) */
+    * {
+      box-sizing: border-box;
       margin: 0;
       padding: 0;
-      height: 100vh;
-      width: 100vw;
-      background-color: rgb(255, 255, 255);
+    }
+
+    body {
+      background-color: white;
+      font-family: 'Segoe UI', sans-serif;
       display: flex;
       justify-content: center;
       align-items: center;
-      font-family: 'Jersey 10', sans-serif;
+      height: 100vh;
     }
 
-    .container {
-      width: 900px;
-      height: 550px;
-      background-color: #8B9C99;
+    .login-container {
+      width: 90%;
+      max-width: 400px;
+      height: 540px;
+      background-color: #f2eee7;
+      border: 3px solid #333;
+      border-radius: 20px;
+      overflow: hidden;
       display: flex;
       flex-direction: column;
-      align-items: center;
-      border: 2px solid black;
-      box-sizing: border-box;
-      position: relative;
+      padding-bottom: 20px;
+      box-shadow: 5px 5px 0px #333;
     }
 
-    .topbar {
-      width: 877px;
+    .top-bar {
       height: 40px;
-      border-bottom: 2px solid black;
-      border-left: 2px solid black;
-      border-right: 2px solid black;
-      background-color: #EBA739;
+      background-color: #f2eee7;
       display: flex;
-      justify-content: flex-end;
       align-items: center;
-      padding-right: 20px;
+      padding: 0 10px;
+      border-bottom: 3px solid black;
     }
 
-    .logout-btn {
-      padding: 5px 15px;
-      font-size: 16px;
-      border: 2px solid black;
-      background-color: #e0e0e0;
-      cursor: pointer;
-    }
-
-    .menu {
+    .circle-group {
       display: flex;
-      gap: 50px;
-      position: absolute;
-      top: -45px;
-      z-index: 10;
+      gap: 8px;
     }
 
-    .tab {
-      background-color: #EBA739;
-      border: 2px solid black;
-      border-bottom: 2px solid black;
-      padding: 8px 30px;
-      border-top-left-radius: 20px;
-      border-top-right-radius: 20px;
-      font-size: 24px;
-      cursor: pointer;
-      transition: 0.2s ease;
+    .circle {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      border: 3px solid black;
     }
 
-    .tab.active-tab {
-      border-bottom: none;
-      z-index: 11;
+    .circle.red {
+      background-color: #ff5f57;
     }
 
-    .main {
-      width: 850px;
-      padding: 10px;
-      background-color: #8B9C99;
-      display: none;
-      flex-direction: column;
-      gap: 20px;
+    .circle.yellow {
+      background-color: #ffbd2e;
     }
 
-    .main.active {
-      display: flex;
-    }
-
-    .top {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .top h1 {
-      font-size: 50px;
-      color: white;
+    .form-body {
       margin: 0;
+      flex: 1;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
     }
 
-    .mid {
+    .form-body h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 35px;
+      color: #ffffff;
+      text-shadow: 
+        -3px -1px 0 black,  
+         1px -1px 0 black,
+        -3px  1px 0 black,
+         1px  1px 0 black;
+      padding-bottom: 20px;
+    }
+
+    .form-body input {
+      width: 90%;
+      padding: 10px;
+      margin-bottom: 15px;
+      border-radius: 8px;
+      border: 2px solid #ccc;
+      font-size: 1rem;
+    }
+
+    .button-row {
       display: flex;
-      gap: 20px;
       justify-content: space-between;
+      width: 90%;
+      gap: 10px;
+      margin-bottom: 15px;
     }
-    .left{
-      height: 200px;
-      width: 200px;
+
+    .half-btn {
+      flex: 1;
+      padding: 10px;
+      border-radius: 8px;
+      border: none;
       background-color: #333;
+      color: white;
+      cursor: pointer;
+      transition: background 0.3s;
     }
-    .right{
-      height: 400px;
-      width: 300px;
-      background-color: #cfd8d6;
+
+    .half-btn:hover {
+      background-color: #555;
+    }
+
+    .toggle-btn {
+      width: 90%;
+      padding: 10px;
+      border-radius: 8px;
+      border: 2px solid #333;
+      background-color: white;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background 0.3s;
+    }
+
+    .toggle-btn:hover {
+      background-color: #eee;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    @media (max-height: 600px) {
+      .login-container {
+        height: 90vh;
+      }
+    }
+
+    @media (max-width: 400px) {
+      .form-body input,
+      .form-body button {
+        font-size: 0.9rem;
+      }
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <!-- Menu Tabs -->
-    <div class="menu">
-      <div class="tab active-tab" onclick="showPage('dashboardPage', 0)">Dashboard</div>
-      <div class="tab" onclick="showPage('detailsPage', 1)">Personal Details</div>
-    </div>
-
-    <!-- Topbar with Logout Button -->
-    <div class="topbar">
-      <button id="logoutBtn" class="logout-btn">Logout</button>
-    </div>
-
-    <!-- Dashboard Page -->
-    <div class="main active" id="dashboardPage" style="flex-direction: column; align-items: center; gap: 10px;">
-      <div class="token-label" style="color: white; font-size: 18px;">Token Number : 01</div>
-      <div class="content-boxes" style="display: flex; gap: 40px;">
-        <!-- Left Box -->
-        <div style="width: 250px; height: 400px; background-color: #e6d3b3; border: 1px solid black; padding: 15px; box-sizing: border-box;">
-          <div style="font-weight: bold; margin-bottom: 10px;">Medical issue:</div>
-          <div id="toggleDetails" style="margin-bottom: 10px;">Full details ▼</div>
-          <div id="detailsContainer" style="width: 100%; height: 300px; background-color: #73a4dd; border: 1px solid black; overflow-y: auto;"></div>
-        </div>
-
-        <!-- Right Box -->
-        <div style="width: 400px; height: 400px; background-color: #e0e0e0; border: 1px solid black; padding: 15px; box-sizing: border-box; position: relative;">
-          <div style="font-weight: bold; margin-bottom: 10px;">Prescription-</div>
-          <div style="width: 100%; height: 280px; background-color: gray; margin-bottom: 10px;">
-            <textarea id="prescriptionInput" placeholder="Write prescription here..." style="width: 100%; height: 100%;"></textarea>
-          </div>
-          <button id="sendBtn" style="position: absolute; right: 15px; bottom: 15px; background-color: #666; color: white; border: 1px solid black; padding: 5px 15px;">Send</button>
-        </div>
+  <div class="login-container">
+    <div class="top-bar">
+      <div class="circle-group">
+        <div class="circle red"></div>
+        <div class="circle yellow"></div>
       </div>
     </div>
 
-    <!-- Personal Details Page -->
-    <div class="main" id="detailsPage">
-      <div class="top"><h1>Details</h1></div>
-      <div class="mid" style="flex-direction: column; width: 100%; gap: 15px;">
-        <div style="display: flex; align-items: center; gap: 10px; background: #cfd8d6; border: 2px solid black; padding: 10px;">
-          <label for="tokenSearch" style="font-size: 24px; font-weight: bold;">Enter Token No.:</label>
-          <input type="text" id="tokenSearch" style="flex: 1; padding: 6px; font-size: 18px;" />
-          <button onclick="fetchDetails()" style="padding: 6px 20px; background-color: #663333; color: white; font-size: 16px; border: 2px solid black;">Fetch</button>
-        </div>
-        <table style="width: 100%; background-color: #9ad8e0; border: 2px solid black; border-collapse: collapse;">
-          <thead>
-            <tr style="border-bottom: 2px solid black;">
-              <th style="padding: 8px;">Name</th>
-              <th style="padding: 8px;">Date</th>
-              <th style="padding: 8px;">Age</th>
-              <th style="padding: 8px;">Gender</th>
-              <th style="padding: 8px;">Phone No.</th>
-              <th style="padding: 8px;">Reason To visit</th>
-            </tr>
-          </thead>
-          <tbody id="detailsTable">
-            <tr><td colspan="6" style="text-align: center; padding: 10px;">No data fetched yet.</td></tr>
-          </tbody>
-        </table>
-        <div style="background-color: #9ad8e0; border: 2px solid black; margin-top: 10px; padding: 10px;">
-          <strong style="font-size: 20px;">Last Prescription:</strong>
-          <div id="lastPrescription" style="margin-top: 10px; font-size: 18px; color: #333;">—</div>
-        </div>
+    <div class="form-body" id="doctor-form">
+      <h2>Doctor's Login</h2>
+      <input type="text" placeholder="Email" id="doctor-email">
+      <input type="password" placeholder="Password" id="doctor-password">
+      <div class="button-row">
+        <button class="half-btn" onclick="login('doctor')">Login</button>
+        <button class="half-btn" onclick="signup('doctor')">Signup</button>
       </div>
+      <button class="toggle-btn" onclick="toggleReceptionist()">Receptionist Login</button>
+    </div>
+
+    <div class="form-body hidden" id="receptionist-form">
+      <h2>Receptionist Login</h2>
+      <input type="text" placeholder="Email" id="receptionist-email">
+      <input type="password" placeholder="Password" id="receptionist-password">
+      <div class="button-row">
+        <button class="half-btn" onclick="login('receptionist')">Login</button>
+        <button class="half-btn" onclick="signup('receptionist')">Signup</button>
+      </div>
+      <button class="toggle-btn" onclick="toggleReceptionist()">Doctor Login</button>
     </div>
   </div>
 
- 
-  <!-- Firebase & App Logic -->
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-    import {
-      getFirestore, collection, query, where, orderBy,
-      doc, getDoc, updateDoc, onSnapshot
-    } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+ <!-- Firebase SDK -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyDfmYfvSl-S9_WKqLCQeGaLRFa4i0_Xw4E",
-      authDomain: "sage-care-72e2e.firebaseapp.com",
-      projectId: "sage-care-72e2e",
-      storageBucket: "sage-care-72e2e.appspot.com",
-      messagingSenderId: "851285921763",
-      appId: "1:851285921763:web:56e0e30867602811e4dad6"
-    };
+  const firebaseConfig = {
+    apiKey: "AIzaSyBHdkTLBvBozcLE1t5E5pNC06TMKVaMILw",
+    authDomain: "clinic-abc01.firebaseapp.com",
+    projectId: "clinic-abc01",
+    storageBucket: "clinic-abc01.firebasestorage.app",
+    messagingSenderId: "543155713970",
+    appId: "1:543155713970:web:5ce466e1e9685d197b16ab"
+  };
 
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const db = getFirestore(app);
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
 
-    let currentTokenData = null;
+  window.toggleReceptionist = function () {
+    const doctorForm = document.getElementById('doctor-form');
+    const receptionistForm = document.getElementById('receptionist-form');
+    doctorForm.classList.toggle('hidden');
+    receptionistForm.classList.toggle('hidden');
+  };
 
-    document.getElementById("logoutBtn").addEventListener("click", () => {
-      signOut(auth).then(() => window.location.href = "index.html");
-    });
+  window.login = function (role) {
+    const email = document.getElementById(`${role}-email`).value;
+    const password = document.getElementById(`${role}-password`).value;
 
-    const tabs = document.querySelectorAll('.tab');
-    const pages = document.querySelectorAll('.main');
-    window.showPage = function (id, index) {
-      pages.forEach(p => p.classList.remove('active'));
-      tabs.forEach(t => t.classList.remove('active-tab'));
-      document.getElementById(id).classList.add('active');
-      tabs[index].classList.add('active-tab');
-    };
-
-    function renderPatient(data) {
-      currentTokenData = data;
-      document.querySelector(".token-label").textContent = `Token Number : ${data.token}`;
-      document.querySelector(".content-boxes").style.display = "flex";
-      const d = document.getElementById("detailsContainer");
-      d.innerHTML = `
-        <div><strong>Name:</strong> ${data.name}</div>
-        <div><strong>Age:</strong> ${data.age}</div>
-        <div><strong>Gender:</strong> ${data.gender}</div>
-        <div><strong>Date:</strong> ${data.date}</div>
-        <div><strong>Phone:</strong> ${data.phone}</div>
-        <div><strong>Reason:</strong> ${data.reason}</div>
-      `;
-    }
-
-    function clearPatient() {
-      currentTokenData = null;
-      document.querySelector(".token-label").textContent = "No patients in queue";
-      document.querySelector(".content-boxes").style.display = "none";
-    }
-
-   function listenToQueue() {
-  const q = query(collection(db, "tokens"), where("prescription", "==", null), orderBy("timestamp", "asc"));
-  onSnapshot(q, snapshot => {
-    console.log("🔁 Snapshot triggered");
-    console.log("🧾 Documents size:", snapshot.size);
-
-    if (!snapshot.empty) {
-      const docSnap = snapshot.docs[0];
-      const tokenData = { id: docSnap.id, ...docSnap.data() };
-      console.log("✅ Patient loaded:", tokenData);
-      currentTokenData = tokenData;
-      renderPatient(tokenData);
-    } else {
-      console.log("🚫 No patients in queue with prescription: null");
-      clearPatient();
-    }
-  });
-}
-
-
-    document.getElementById("sendBtn").addEventListener("click", async () => {
-      const prescription = document.getElementById("prescriptionInput").value.trim();
-      if (!prescription) return alert("Please enter a prescription.");
-      if (!currentTokenData || !currentTokenData.id) return alert("No patient loaded.");
-
-      try {
-        await updateDoc(doc(db, "tokens", currentTokenData.id), { prescription });
-        alert("Prescription saved!");
-        document.getElementById("prescriptionInput").value = "";
-        clearPatient(); // Snapshot will auto-load next
-      } catch (e) {
-        console.error(e);
-        alert("Failed to save prescription.");
-      }
-    });
-
-    window.fetchDetails = async function () {
-      const token = document.getElementById("tokenSearch").value.trim();
-      const table = document.getElementById("detailsTable");
-      const presDiv = document.getElementById("lastPrescription");
-      try {
-        const snap = await getDoc(doc(db, "tokens", token));
-        if (!snap.exists()) {
-          table.innerHTML = `<tr><td colspan="6">Token not found</td></tr>`;
-          presDiv.textContent = "—";
-          return;
+    signInWithEmailAndPassword(auth, email, password)
+      .then(() => {
+        if (role === 'receptionist') {
+          window.location.href = 'receptionist.html';
+        } else {
+          window.location.href = 'Doctor.html';
         }
-        const d = snap.data();
-        table.innerHTML = `<tr>
-          <td>${d.name}</td><td>${d.date}</td><td>${d.age}</td><td>${d.gender}</td><td>${d.phone}</td><td>${d.reason}</td>
-        </tr>`;
-        presDiv.textContent = d.prescription || "No previous prescription.";
-      } catch (e) {
-        console.error(e);
-        alert("Failed to fetch data.");
-      }
-    };
+      })
+      .catch((error) => {
+        alert('Login error: ' + error.message);
+      });
+  };
 
-    const toggle = document.getElementById("toggleDetails");
-    let isVisible = true;
-    toggle.addEventListener("click", () => {
-      isVisible = !isVisible;
-      const box = document.getElementById("detailsContainer");
-      box.style.display = isVisible ? "block" : "none";
-      toggle.textContent = isVisible ? "Full details ▼" : "Show details ▲";
-    });
+  window.signup = function (role) {
+    const email = document.getElementById(`${role}-email`).value;
+    const password = document.getElementById(`${role}-password`).value;
 
-    onAuthStateChanged(auth, user => {
-      if (!user) window.location.href = "index.html";
-      else listenToQueue();
-    });
-  </script>
+    createUserWithEmailAndPassword(auth, email, password)
+      .then(() => {
+        if (role === 'receptionist') {
+          window.location.href = 'receptionist.html';
+        } else {
+          alert('Doctor account created!');
+        }
+      })
+      .catch((error) => {
+        alert('Signup error: ' + error.message);
+      });
+  };
+</script>
 
 </body>
 </html>
